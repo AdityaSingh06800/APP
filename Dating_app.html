@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavelength - Dating App UI Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .screen-section {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease;
+            transform-origin: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screen-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .phone-mockup {
+            width: 100%;
+            max-width: 340px;
+            height: 700px;
+            background: #000;
+            border-radius: 40px;
+            padding: 10px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .app-content {
+            height: calc(100% - 44px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Onboarding Styles */
+        .onboarding-screen {
+            padding: 40px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 20px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        .onboarding-title {
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .onboarding-subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Home Feed Styles */
+        .home-feed {
+            height: 100%;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .card-stack {
+            position: relative;
+            height: 500px;
+            margin: 20px;
+        }
+
+        .profile-card {
+            position: absolute;
+            width: calc(100% - 40px);
+            height: 450px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            left: 20px;
+            top: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:nth-child(1) {
+            z-index: 3;
+        }
+
+        .profile-card:nth-child(2) {
+            transform: scale(0.95) translateY(10px);
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .profile-card:nth-child(3) {
+            transform: scale(0.9) translateY(20px);
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voice-wave {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 3px;
+            background: rgba(255,255,255,0.95);
+            padding: 10px 20px;
+            border-radius: 30px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 3px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 30px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 35px; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; height: 28px; }
+
+        .card-info {
+            padding: 20px;
+        }
+
+        .card-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .compatibility-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .interests-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .action-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-pass {
+            background: white;
+            color: #ff4458;
+        }
+
+        .btn-like {
+            background: white;
+            color: #00d387;
+        }
+
+        .btn-superlike {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Profile Styles */
+        .profile-view {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-bio {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .voice-intro {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-intro:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Explore Tab */
+        .explore-tab {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .explore-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .explore-card:hover {
+            transform: scale(1.05);
+        }
+
+        .explore-card-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .explore-card-info {
+            padding: 12px;
+        }
+
+        .explore-card-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .explore-card-detail {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Settings */
+        .settings-screen {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .settings-group {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .settings-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .settings-item:hover {
+            background: #f8f9fa;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .settings-value {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #ccc;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        .danger-zone {
+            margin-top: 30px;
+        }
+
+        .danger-item {
+            color: #ff4458;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+
+        /* Feature Cards */
+        .feature-section {
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-title {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+        }
+
+        .feature-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .screens-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Wavelength</h1>
+            <p>Dating Reimagined Through Voice & Chemistry</p>
+        </div>
+
+        <div class="screens-grid">
+            <!-- Onboarding Screen -->
+            <div class="screen-section">
+                <h2 class="section-title">Onboarding & Sign Up</h2>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>📶 🔋</span>
+                        </div>
+                        <div class="app-content">
+                            <div class="onboarding-screen">
+                                <div class="logo">🎵</div>
+                                <h1 class="onboarding-title">Wavelength</h1>
+                                <p class="onboarding-subtitle">Find your perfect match through<br>voice chemistry & shared vibes</p>
+                                
+                                <div class="auth-buttons">
+                                    <button class="btn btn-primary">Continue with Phone</button>
+                                    <button class="btn btn-secondary">Continue with Apple</button>
+                                    <button class="btn btn-secondary">Continue with Google</button>
+                                </div>
+                                
+                                <p style="color: rgba(255,255,255,0.8); font-size: 12px;">
+                                    By continuing, you agree to our Terms & Privacy Policy
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Feed -->
+            <div class="screen-section">
+                <h2 class="section-title">Home Feed - Voice Discovery</h2>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>📶 🔋</span>
+                        </div>
+                        <div class="app-content">
+                            <div class="home-feed">
+                                <div class="card-stack">
+                                    <div class="profile-card">
+                                        <div class="card-image">
+                                            <div class="voice-wave">
+                                                <div class="wave-bar"></div>
+                                                <div class="wave-bar"></div>
+                                                <div class="wave-bar"></div>
+                                                <div class="wave-bar"></div>
+                                                <div class="wave-bar"></div>
+                                            </div>
+                                        </div>
+                                        <div class="card-info">
+                                            <h3 class="card-name">Priya, 28</h3>
+                                            <div class="compatibility-score">⚡ 92% Wavelength Match</div>
+                                            <div class="interests-tags">
+                                                <span class="tag">🎸 Music</span>
+                                                <span class="tag">📚 Books</span>
+                                                <span class="tag">☕ Coffee</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile-card"></div>
+                                    <div class="profile-card"></div>
+                                </div>
+                                
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-pass">❌</button>
+                                    <button class="action-btn btn-superlike">⭐</button>
+                                    <button class="action-btn btn-like">💚</button>
+                                </div>
+                                
+                                <div class="bottom-nav">
+                                    <div class="nav-item active">
+                                        <span class="nav-icon">🎵</span>
+                                        <span class="nav-label">Discover</span>
+                                    </div>
+                                    <div class="nav-item">
+                                        <span class="nav-icon">🔍</span>
+                                        <span class="nav-label">Explore</span>
+                                    </div>
+                                    <div class="nav-item">
+                                        <span class="nav-icon">💬</span>
+                                        <span class="nav-label">Chats</span>
+                                    </div>
+                                    <div class="nav-item">
+                                        <span class="nav-icon">👤</span>
+                                        <span class="nav-label">Profile</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div class="screen-section">
+                <h2 class="section-title">Profile View</h2>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>📶 🔋</span>
+                        </div>
+                        <div class="app-content">
+                            <div class="profile-view">
+                                <div class="profile-header">
+                                    <div class="profile-avatar">👤</div>
+                                    <h3 class="profile-name">Aditya Singh</h3>
+                                    <p class="profile-bio">Adventure seeker, coffee enthusiast, and weekend chef. Let's share stories!</p>
+                                    <div class="voice-intro">🎤 Play Voice Intro</div>
+                                </div>
+                                
+                                <div class="profile-section">
+                                    <h4 class="section-header">🎯 Interests</h4>
+                                    <div class="interests-tags">
+                                        <span class="tag">🏔️ Hiking</span>
+                                        <span class="tag">📷 Photography</span>
+                                        <span class="tag">🍳 Cooking</span>
+                                        <span class="tag">🎬 Movies</span>
+                                        <span class="tag">🎮 Gaming</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="profile-section">
+                                    <h4 class="section-header">🎵 Voice Snippets</h4>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <div style="background: #f0f0f0; padding: 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <span>▶️</span>
+                                            <span style="flex: 1; font-size: 14px;">My perfect weekend</span>
+                                            <span style="font-size: 12px; color: #666;">0:30</span>
+                                        </div>
+                                        <div style="background: #f0f0f0; padding: 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <span>▶️</span>
+                                            <span style="flex: 1; font-size: 14px;">Travel story</span>
+                                            <span style="font-size: 12px; color: #666;">0:45</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="profile-section">
+                                    <h4 class="section-header">📊 Compatibility Insights</h4>
+                                    <div style="display: flex; justify-content: space-around; text-align: center;">
+                                        <div>
+                                            <div style="font-size: 24px; font-weight: 700; color: #667eea;">89%</div>
+                                            <div style="font-size: 12px; color: #666;">Interests</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 24px; font-weight: 700; color: #764ba2;">94%</div>
+                                            <div style="font-size: 12px; color: #666;">Values</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 24px; font-weight: 700; color: #667eea;">87%</div>
+                                            <div style="font-size: 12px; color: #666;">Lifestyle</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explore Tab -->
+            <div class="screen-section">
+                <h2 class="section-title">Explore & Discover</h2>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>📶 🔋</span>
+                        </div>
+                        <div class="app-content">
+                            <div class="explore-tab">
+                                <div class="search-bar">
+                                    <span>🔍</span>
+                                    <input type="text" class="search-input" placeholder="Search interests, vibes...">
+                                </div>
+                                
+                                <div class="filter-chips">
+                                    <div class="filter-chip active">Near Me</div>
+                                    <div class="filter-chip">New Users</div>
+                                    <div class="filter-chip">High Match</div>
+                                    <div class="filter-chip">Similar Music</div>
+                                    <div class="filter-chip">Active Now</div>
+                                </div>
+                                
+                                <h4 style="margin: 20px 0 15px; font-weight: 600; color: #333;">🔥 Trending Wavelengths</h4>
+                                
+                                <div class="explore-grid">
+                                    <div class="explore-card">
+                                        <div class="explore-card-image"></div>
+                                        <div class="explore-card-info">
+                                            <div class="explore-card-name">Akansha, 26
